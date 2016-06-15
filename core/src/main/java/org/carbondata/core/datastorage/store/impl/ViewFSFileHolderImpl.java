@@ -16,13 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.carbondata.core.datastorage.store.impl;
 
 import org.carbondata.common.logging.LogService;
 import org.carbondata.common.logging.LogServiceFactory;
 
-public class HDFSFileHolderImpl extends AbstractDFSFileHolderImpl {
+public class ViewFSFileHolderImpl extends  AbstractDFSFileHolderImpl {
   private static final LogService LOGGER =
-      LogServiceFactory.getLogService(HDFSFileHolderImpl.class.getName());
+      LogServiceFactory.getLogService(ViewFSFileHolderImpl.class.getName());
 }

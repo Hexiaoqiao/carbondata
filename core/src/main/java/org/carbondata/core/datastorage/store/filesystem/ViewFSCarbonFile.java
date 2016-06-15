@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.carbondata.core.datastorage.store.filesystem;
 
 import java.io.IOException;
@@ -29,24 +28,24 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
-import org.apache.hadoop.hdfs.DistributedFileSystem;
+import org.apache.hadoop.fs.viewfs.ViewFileSystem;
 
-public class HDFSCarbonFile extends AbstractDFSCarbonFile {
+public class ViewFSCarbonFile extends AbstractDFSCarbonFile {
   /**
    * LOGGER
    */
   private static final LogService LOGGER =
-      LogServiceFactory.getLogService(HDFSCarbonFile.class.getName());
+      LogServiceFactory.getLogService(ViewFSCarbonFile.class.getName());
 
-  public HDFSCarbonFile(String filePath) {
+  public ViewFSCarbonFile(String filePath) {
     super(filePath);
   }
 
-  public HDFSCarbonFile(Path path) {
+  public ViewFSCarbonFile(Path path) {
     super(path);
   }
 
-  public HDFSCarbonFile(FileStatus fileStatus) {
+  public ViewFSCarbonFile(FileStatus fileStatus) {
     super(fileStatus);
   }
 
@@ -60,7 +59,7 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
     }
     CarbonFile[] files = new CarbonFile[listStatus.length];
     for (int i = 0; i < files.length; i++) {
-      files[i] = new HDFSCarbonFile(listStatus[i]);
+      files[i] = new ViewFSCarbonFile(listStatus[i]);
     }
     return files;
   }
@@ -91,7 +90,7 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
         listStatus =
             path.getFileSystem(FileFactory.getConfiguration()).listStatus(path, new PathFilter() {
               @Override public boolean accept(Path path) {
-                return fileFilter.accept(new HDFSCarbonFile(path));
+                return fileFilter.accept(new ViewFSCarbonFile(path));
               }
             });
       } else {
@@ -109,9 +108,9 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
     FileSystem fs;
     try {
       fs = fileStatus.getPath().getFileSystem(FileFactory.getConfiguration());
-      if (fs instanceof DistributedFileSystem) {
-        ((DistributedFileSystem) fs).rename(fileStatus.getPath(), new Path(changetoName),
-            org.apache.hadoop.fs.Options.Rename.OVERWRITE);
+      if (fs instanceof ViewFileSystem) {
+        ((ViewFileSystem) fs).delete(new Path(changetoName));
+        ((ViewFileSystem) fs).rename(fileStatus.getPath(), new Path(changetoName));
         return true;
       } else {
         return false;

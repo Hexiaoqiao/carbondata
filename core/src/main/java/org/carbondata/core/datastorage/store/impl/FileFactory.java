@@ -32,6 +32,7 @@ import org.carbondata.core.datastorage.store.FileHolder;
 import org.carbondata.core.datastorage.store.filesystem.CarbonFile;
 import org.carbondata.core.datastorage.store.filesystem.HDFSCarbonFile;
 import org.carbondata.core.datastorage.store.filesystem.LocalCarbonFile;
+import org.carbondata.core.datastorage.store.filesystem.ViewFSCarbonFile;
 import org.carbondata.core.util.CarbonUtil;
 
 import org.apache.commons.io.FileUtils;
@@ -49,7 +50,7 @@ public final class FileFactory {
   static {
     String property = CarbonUtil.getCarbonStorePath(null, null);
     if (property != null) {
-      if (property.startsWith("hdfs://")) {
+      if (property.startsWith(CarbonUtil.HDFS_PREFIX)) {
         storeDefaultFileType = FileType.HDFS;
       }
     }
@@ -72,6 +73,8 @@ public final class FileFactory {
         return new FileHolderImpl();
       case HDFS:
         return new HDFSFileHolderImpl();
+      case VIEWFS:
+        return new ViewFSFileHolderImpl();
       default:
         return new FileHolderImpl();
     }
@@ -80,16 +83,20 @@ public final class FileFactory {
   public static FileType getFileType() {
     String property = CarbonUtil.getCarbonStorePath(null, null);
     if (property != null) {
-      if (property.startsWith("hdfs://")) {
+      if (property.startsWith(CarbonUtil.HDFS_PREFIX)) {
         storeDefaultFileType = FileType.HDFS;
+      } else if (property.startsWith(CarbonUtil.VIEWFS_PREFIX)) {
+        storeDefaultFileType = FileType.VIEWFS;
       }
     }
     return storeDefaultFileType;
   }
 
   public static FileType getFileType(String path) {
-    if (path.startsWith("hdfs://")) {
+    if (path.startsWith(CarbonUtil.HDFS_PREFIX)) {
       return FileType.HDFS;
+    } else if (path.startsWith(CarbonUtil.VIEWFS_PREFIX)) {
+      return FileType.VIEWFS;
     }
     return FileType.LOCAL;
   }
@@ -100,6 +107,8 @@ public final class FileFactory {
         return new LocalCarbonFile(path);
       case HDFS:
         return new HDFSCarbonFile(path);
+      case VIEWFS:
+        return new ViewFSCarbonFile(path);
       default:
         return new LocalCarbonFile(path);
     }
@@ -112,6 +121,7 @@ public final class FileFactory {
       case LOCAL:
         return new DataInputStream(new BufferedInputStream(new FileInputStream(path)));
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataInputStream stream = fs.open(pt);
@@ -128,6 +138,7 @@ public final class FileFactory {
       case LOCAL:
         return new DataInputStream(new BufferedInputStream(new FileInputStream(path)));
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataInputStream stream = fs.open(pt, bufferSize);
@@ -152,6 +163,7 @@ public final class FileFactory {
     path = path.replace("\\", "/");
     switch (fileType) {
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataInputStream stream = fs.open(pt, bufferSize);
@@ -176,6 +188,7 @@ public final class FileFactory {
       case LOCAL:
         return new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path)));
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataOutputStream stream = fs.create(pt, true);
@@ -192,6 +205,7 @@ public final class FileFactory {
       case LOCAL:
         return new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path)));
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataOutputStream stream = fs.create(pt, replicationFactor);
@@ -209,6 +223,7 @@ public final class FileFactory {
         return new DataOutputStream(
             new BufferedOutputStream(new FileOutputStream(path), bufferSize));
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataOutputStream stream = fs.create(pt, true, bufferSize);
@@ -227,6 +242,7 @@ public final class FileFactory {
         return new DataOutputStream(
             new BufferedOutputStream(new FileOutputStream(path, append), bufferSize));
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataOutputStream stream = null;
@@ -256,6 +272,7 @@ public final class FileFactory {
         return new DataOutputStream(
             new BufferedOutputStream(new FileOutputStream(path), bufferSize));
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataOutputStream stream =
@@ -280,6 +297,7 @@ public final class FileFactory {
     filePath = filePath.replace("\\", "/");
     switch (fileType) {
       case HDFS:
+      case VIEWFS:
         Path path = new Path(filePath);
         FileSystem fs = path.getFileSystem(configuration);
         if (performFileCheck) {
@@ -311,6 +329,7 @@ public final class FileFactory {
     filePath = filePath.replace("\\", "/");
     switch (fileType) {
       case HDFS:
+      case VIEWFS:
         Path path = new Path(filePath);
         FileSystem fs = path.getFileSystem(configuration);
         return fs.exists(path);
@@ -326,6 +345,7 @@ public final class FileFactory {
     filePath = filePath.replace("\\", "/");
     switch (fileType) {
       case HDFS:
+      case VIEWFS:
         Path path = new Path(filePath);
         FileSystem fs = path.getFileSystem(configuration);
         return fs.createNewFile(path);
@@ -341,6 +361,7 @@ public final class FileFactory {
     filePath = filePath.replace("\\", "/");
     switch (fileType) {
       case HDFS:
+      case VIEWFS:
         Path path = new Path(filePath);
         FileSystem fs = path.getFileSystem(configuration);
         return fs.mkdirs(path);
@@ -366,6 +387,7 @@ public final class FileFactory {
       case LOCAL:
         return new DataOutputStream(new BufferedOutputStream(new FileOutputStream(path, true)));
       case HDFS:
+      case VIEWFS:
         Path pt = new Path(path);
         FileSystem fs = pt.getFileSystem(configuration);
         FSDataOutputStream stream = fs.append(pt);
@@ -388,6 +410,7 @@ public final class FileFactory {
     filePath = filePath.replace("\\", "/");
     switch (fileType) {
       case HDFS:
+      case VIEWFS:
         Path path = new Path(filePath);
         FileSystem fs = path.getFileSystem(configuration);
         if (fs.createNewFile(path)) {
@@ -403,7 +426,7 @@ public final class FileFactory {
   }
 
   public enum FileType {
-    LOCAL, HDFS
+    LOCAL, HDFS, VIEWFS
   }
 
   /**
@@ -418,6 +441,7 @@ public final class FileFactory {
     FileType fileType = getFileType(filePath);
     switch (fileType) {
       case HDFS:
+      case VIEWFS:
         return filePath;
       case LOCAL:
       default:
@@ -438,6 +462,7 @@ public final class FileFactory {
     FileType fileType = getFileType(filePath);
     switch (fileType) {
       case HDFS:
+      case VIEWFS:
         Path path = new Path(filePath);
         FileSystem fs = path.getFileSystem(configuration);
         return fs.getContentSummary(path).getLength();

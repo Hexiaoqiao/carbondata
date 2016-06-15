@@ -27,10 +27,7 @@ import java.util.Map;
 import org.carbondata.common.logging.LogService;
 import org.carbondata.common.logging.LogServiceFactory;
 import org.carbondata.core.constants.CarbonCommonConstants;
-import org.carbondata.core.datastorage.store.filesystem.CarbonFile;
-import org.carbondata.core.datastorage.store.filesystem.CarbonFileFilter;
-import org.carbondata.core.datastorage.store.filesystem.HDFSCarbonFile;
-import org.carbondata.core.datastorage.store.filesystem.LocalCarbonFile;
+import org.carbondata.core.datastorage.store.filesystem.*;
 import org.carbondata.core.datastorage.store.impl.FileFactory;
 import org.carbondata.core.datastorage.store.impl.FileFactory.FileType;
 import org.carbondata.core.load.LoadMetadataDetails;
@@ -125,6 +122,8 @@ public final class CarbonDataProcessorUtil {
     CarbonFile carbonFile = null;
     if (fileType.equals(FileFactory.FileType.HDFS)) {
       carbonFile = new HDFSCarbonFile(badLogStoreLocation);
+    } else if (fileType.equals(FileType.VIEWFS)) {
+      carbonFile = new ViewFSCarbonFile(badLogStoreLocation);
     } else {
       carbonFile = new LocalCarbonFile(badLogStoreLocation);
     }
