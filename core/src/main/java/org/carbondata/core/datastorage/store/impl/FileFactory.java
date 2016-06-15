@@ -52,11 +52,13 @@ public final class FileFactory {
     if (property != null) {
       if (property.startsWith(CarbonUtil.HDFS_PREFIX)) {
         storeDefaultFileType = FileType.HDFS;
+      } else if (property.startsWith(CarbonUtil.VIEWFS_PREFIX)) {
+        storeDefaultFileType = FileType.VIEWFS;
       }
     }
 
     configuration = new Configuration();
-    configuration.addResource(new Path("../core-default.xml"));
+      configuration.addResource(new Path("../core-default.xml"));
   }
 
   private FileFactory() {
