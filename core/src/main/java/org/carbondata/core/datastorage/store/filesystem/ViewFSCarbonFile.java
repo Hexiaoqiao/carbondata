@@ -104,6 +104,11 @@ public class ViewFSCarbonFile extends AbstractDFSCarbonFile {
   }
 
   @Override
+  public CarbonFile getParentFile() {
+    return new ViewFSCarbonFile(fileStatus.getPath().getParent());
+  }
+
+  @Override
   public boolean renameForce(String changetoName) {
     FileSystem fs;
     try {

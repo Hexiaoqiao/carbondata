@@ -73,7 +73,6 @@ public abstract  class AbstractDFSCarbonFile implements CarbonFile {
     } catch (IOException e) {
       return false;
     }
-
   }
 
   @Override public String getAbsolutePath() {
@@ -102,10 +101,6 @@ public abstract  class AbstractDFSCarbonFile implements CarbonFile {
 
   @Override public String getCanonicalPath() {
     return getAbsolutePath();
-  }
-
-  @Override public CarbonFile getParentFile() {
-    return new HDFSCarbonFile(fileStatus.getPath().getParent());
   }
 
   @Override public String getPath() {

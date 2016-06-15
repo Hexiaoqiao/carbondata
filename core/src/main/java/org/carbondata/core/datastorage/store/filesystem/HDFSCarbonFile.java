@@ -105,6 +105,11 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
   }
 
   @Override
+  public CarbonFile getParentFile() {
+    return new HDFSCarbonFile(fileStatus.getPath().getParent());
+  }
+
+  @Override
   public boolean renameForce(String changetoName) {
     FileSystem fs;
     try {
