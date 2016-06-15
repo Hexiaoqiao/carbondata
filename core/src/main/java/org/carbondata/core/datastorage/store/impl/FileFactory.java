@@ -58,7 +58,7 @@ public final class FileFactory {
     }
 
     configuration = new Configuration();
-      configuration.addResource(new Path("../core-default.xml"));
+    configuration.addResource(new Path("../core-default.xml"));
   }
 
   private FileFactory() {
