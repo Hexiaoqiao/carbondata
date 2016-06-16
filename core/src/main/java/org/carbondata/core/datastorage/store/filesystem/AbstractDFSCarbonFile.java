@@ -49,7 +49,7 @@ public abstract  class AbstractDFSCarbonFile implements CarbonFile {
       fs = path.getFileSystem(FileFactory.getConfiguration());
       fileStatus = fs.getFileStatus(path);
     } catch (IOException e) {
-      LOGGER.error("Exception occured" + e.getMessage());
+      LOGGER.error("Exception occured:" + e.getMessage());
     }
   }
 
@@ -58,7 +58,7 @@ public abstract  class AbstractDFSCarbonFile implements CarbonFile {
       fs = path.getFileSystem(FileFactory.getConfiguration());
       fileStatus = fs.getFileStatus(path);
     } catch (IOException e) {
-      LOGGER.error("Exception occured" + e.getMessage());
+      LOGGER.error("Exception occured:" + e.getMessage());
     }
   }
 
@@ -84,7 +84,7 @@ public abstract  class AbstractDFSCarbonFile implements CarbonFile {
   }
 
   @Override public boolean isDirectory() {
-    return fileStatus.isDir();
+    return fileStatus.isDirectory();
   }
 
   @Override public boolean exists() {
@@ -94,7 +94,7 @@ public abstract  class AbstractDFSCarbonFile implements CarbonFile {
         return fs.exists(fileStatus.getPath());
       }
     } catch (IOException e) {
-      LOGGER.error("Exception occured" + e.getMessage());
+      LOGGER.error("Exception occured:" + e.getMessage());
     }
     return false;
   }
@@ -117,7 +117,7 @@ public abstract  class AbstractDFSCarbonFile implements CarbonFile {
       fs = fileStatus.getPath().getFileSystem(FileFactory.getConfiguration());
       return fs.rename(fileStatus.getPath(), new Path(changetoName));
     } catch (IOException e) {
-      LOGGER.error("Exception occured" + e.getMessage());
+      LOGGER.error("Exception occured:" + e.getMessage());
       return false;
     }
   }
@@ -128,7 +128,7 @@ public abstract  class AbstractDFSCarbonFile implements CarbonFile {
       fs = fileStatus.getPath().getFileSystem(FileFactory.getConfiguration());
       return fs.delete(fileStatus.getPath(), true);
     } catch (IOException e) {
-      LOGGER.error("Exception occured" + e.getMessage());
+      LOGGER.error("Exception occured:" + e.getMessage());
       return false;
     }
   }

@@ -33,16 +33,16 @@ import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-public abstract class AbstractDFSFileHolderImpl implements FileHolder {
+public class DFSFileHolderImpl implements FileHolder {
 
   private static final LogService LOGGER =
-      LogServiceFactory.getLogService(AbstractDFSFileHolderImpl.class.getName());
+      LogServiceFactory.getLogService(DFSFileHolderImpl.class.getName());
   /**
    * cache to hold filename and its stream
    */
   private Map<String, FSDataInputStream> fileNameAndStreamCache;
 
-  public AbstractDFSFileHolderImpl() {
+  public DFSFileHolderImpl() {
     this.fileNameAndStreamCache =
         new HashMap<String, FSDataInputStream>(CarbonCommonConstants.DEFAULT_COLLECTION_SIZE);
   }

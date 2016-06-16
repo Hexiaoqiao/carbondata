@@ -75,8 +75,8 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
       } else {
         return null;
       }
-    } catch (IOException ex) {
-      LOGGER.error("Exception occured" + ex.getMessage());
+    } catch (IOException e) {
+      LOGGER.error("Exception occured: " + e.getMessage());
       return new CarbonFile[0];
     }
     return getFiles(listStatus);
@@ -97,8 +97,8 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
       } else {
         return null;
       }
-    } catch (IOException e) {
-      LOGGER.error("Exception occured" + e.getMessage());
+    } catch (IOException ex) {
+      LOGGER.error("Exception occured: " + ex.getMessage());
       return new CarbonFile[0];
     }
     return getFiles(listStatus);
@@ -122,7 +122,7 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
         return false;
       }
     } catch (IOException e) {
-      LOGGER.error("Exception occured" + e.getMessage());
+      LOGGER.error("Exception occured: " + e.getMessage());
       return false;
     }
   }

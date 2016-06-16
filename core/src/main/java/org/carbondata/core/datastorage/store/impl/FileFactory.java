@@ -74,9 +74,8 @@ public final class FileFactory {
       case LOCAL:
         return new FileHolderImpl();
       case HDFS:
-        return new HDFSFileHolderImpl();
       case VIEWFS:
-        return new ViewFSFileHolderImpl();
+        return new DFSFileHolderImpl();
       default:
         return new FileHolderImpl();
     }

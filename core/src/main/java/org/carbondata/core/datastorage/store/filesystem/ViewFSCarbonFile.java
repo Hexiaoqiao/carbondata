@@ -68,7 +68,7 @@ public class ViewFSCarbonFile extends AbstractDFSCarbonFile {
   public CarbonFile[] listFiles() {
     FileStatus[] listStatus = null;
     try {
-      if (null != fileStatus && fileStatus.isDir()) {
+      if (null != fileStatus && fileStatus.isDirectory()) {
         Path path = fileStatus.getPath();
         listStatus = path.getFileSystem(FileFactory.getConfiguration()).listStatus(path);
       } else {
@@ -114,8 +114,8 @@ public class ViewFSCarbonFile extends AbstractDFSCarbonFile {
     try {
       fs = fileStatus.getPath().getFileSystem(FileFactory.getConfiguration());
       if (fs instanceof ViewFileSystem) {
-        ((ViewFileSystem) fs).delete(new Path(changetoName));
-        ((ViewFileSystem) fs).rename(fileStatus.getPath(), new Path(changetoName));
+        fs.delete(new Path(changetoName), true);
+        fs.rename(fileStatus.getPath(), new Path(changetoName));
         return true;
       } else {
         return false;

@@ -976,6 +976,11 @@ public final class CarbonCommonConstants {
   public static final long CARBON_256MB = 256*1024*1024;
 
   /**
+   * Data type String.
+   */
+  public static final String DATATYPE_STRING = "STRING";
+
+  /**
    * SEGMENT_COMPACTED is property to indicate whether seg is compacted or not.
    */
   public static final String SEGMENT_COMPACTED = "Compacted";
@@ -992,6 +997,15 @@ public final class CarbonCommonConstants {
    */
   public static final String INCLUDE_ALREADY_COMPACTED_SEGMENTS_DEFAULT =
       "false";
+  /**
+   * property for number of core to load the blocks in driver
+   */
+  public static final String NUMBER_OF_CORE_TO_LOAD_DRIVER_SEGMENT =
+      "no.of.cores.to.load.blocks.in.driver";
+  /**
+   * default number of cores
+   */
+  public static final int NUMBER_OF_CORE_TO_LOAD_DRIVER_SEGMENT_DEFAULT_VALUE = 10;
 
   private CarbonCommonConstants() {
   }
