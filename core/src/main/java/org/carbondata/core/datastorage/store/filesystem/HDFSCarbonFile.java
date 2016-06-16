@@ -87,14 +87,12 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
   public CarbonFile[] listFiles(final CarbonFileFilter fileFilter) {
     CarbonFile[] files = listFiles();
     if (files != null && files.length >= 1) {
-
       List<CarbonFile> fileList = new ArrayList<CarbonFile>(files.length);
       for (int i = 0; i < files.length; i++) {
         if (fileFilter.accept(files[i])) {
           fileList.add(files[i]);
         }
       }
-
       if (fileList.size() >= 1) {
         return fileList.toArray(new CarbonFile[fileList.size()]);
       } else {
