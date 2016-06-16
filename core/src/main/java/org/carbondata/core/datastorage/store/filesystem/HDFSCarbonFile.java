@@ -20,6 +20,8 @@
 package org.carbondata.core.datastorage.store.filesystem;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.carbondata.common.logging.LogService;
 import org.carbondata.common.logging.LogServiceFactory;
@@ -28,7 +30,6 @@ import org.carbondata.core.datastorage.store.impl.FileFactory;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathFilter;
 import org.apache.hadoop.hdfs.DistributedFileSystem;
 
 public class HDFSCarbonFile extends AbstractDFSCarbonFile {
@@ -69,7 +70,7 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
   public CarbonFile[] listFiles() {
     FileStatus[] listStatus = null;
     try {
-      if (null != fileStatus && fileStatus.isDir()) {
+      if (null != fileStatus && fileStatus.isDirectory()) {
         Path path = fileStatus.getPath();
         listStatus = path.getFileSystem(FileFactory.getConfiguration()).listStatus(path);
       } else {
@@ -84,24 +85,23 @@ public class HDFSCarbonFile extends AbstractDFSCarbonFile {
 
   @Override
   public CarbonFile[] listFiles(final CarbonFileFilter fileFilter) {
-    FileStatus[] listStatus = null;
-    try {
-      if (null != fileStatus && fileStatus.isDir()) {
-        Path path = fileStatus.getPath();
-        listStatus =
-            path.getFileSystem(FileFactory.getConfiguration()).listStatus(path, new PathFilter() {
-              @Override public boolean accept(Path path) {
-                return fileFilter.accept(new HDFSCarbonFile(path));
-              }
-            });
-      } else {
-        return null;
+    CarbonFile[] files = listFiles();
+    if (files != null && files.length >= 1) {
+
+      List<CarbonFile> fileList = new ArrayList<CarbonFile>(files.length);
+      for (int i = 0; i < files.length; i++) {
+        if (fileFilter.accept(files[i])) {
+          fileList.add(files[i]);
+        }
       }
-    } catch (IOException ex) {
-      LOGGER.error("Exception occured: " + ex.getMessage());
-      return new CarbonFile[0];
+
+      if (fileList.size() >= 1) {
+        return fileList.toArray(new CarbonFile[fileList.size()]);
+      } else {
+        return new CarbonFile[0];
+      }
     }
-    return getFiles(listStatus);
+    return files;
   }
 
   @Override
